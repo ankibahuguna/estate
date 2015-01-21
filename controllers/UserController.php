@@ -8,7 +8,8 @@ use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Regions;
+use app\models\Subregion;
 /**
  * UserController implements the CRUD actions for Users model.
  */
@@ -60,6 +61,16 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
+		if(Yii::$app->request->isAjax)
+		{
+			
+		$region=Yii::$app->request->get('region');
+		$regid=Regions::find()->where(['country'=>$region])->one();
+		$id= $regid->id;
+		$subreg=Subregion::find()->where(['region_id'=>$id])->all();
+		return $this->render('create',['subregions'=>$subreg]);
+		}
+		else{
         $model = new Users();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -70,7 +81,7 @@ class UserController extends Controller
             ]);
         }
     }
-
+}
     /**
      * Updates an existing Users model.
      * If update is successful, the browser will be redirected to the 'view' page.

@@ -1,6 +1,7 @@
 <?php
 use app\models\UserRole;
 use app\models\Regions;
+use app\models\Subregion;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -26,7 +27,11 @@ use yii\widgets\ActiveForm;
 	
 	<?= $form->field($model,'country')->dropDownList(ArrayHelper::map(Regions::find()->all(),'country','country')) ?>
 
-	<?= $form->field($model, 'state')->textInput(['maxlength' => 50]) ?>
+	<?php 
+	$subregions=isset($subregions)?$subregions:(Subregion::find()->where(['region_id'=>4])->all());
+	
+	?>
+	<?= $form->field($model, 'state')->dropDownList(ArrayHelper::map($subregions,'name','name')) ?>
 	  
     <?= $form->field($model, 'city')->textInput(['maxlength' => 55]) ?>
 
